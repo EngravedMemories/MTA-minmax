@@ -18,7 +18,7 @@ The `Cityscapes` and `Foggy Cityscapes` datasets with ground truths could be dow
 
 The `Rainy Cityscapes` dataset is generated following the instructions of [this paper](https://ieeexplore.ieee.org/abstract/document/10574400). Please refer to `Readme.md` --> `DATA` --> `1. Download the datasets`:
 
-- Download the [Rainy Mask](https://github.com/tsingqguo/efficientderain)(rainmix/Streaks_Garg06.zip);
+- Download the [Rainy Mask](https://github.com/tsingqguo/efficientderain) (rainmix/Streaks_Garg06.zip);
 - Set your paths for rainy mask and Cityscape dataset in the code dataset/generate_rainy_cityscape.py, then to generate the `Rain Cityscapes` dataset.
 
 All the images and labels are resized to [512 x 256] resolution.
@@ -31,7 +31,8 @@ All the images and labels are resized to [288 x 384] resolution.
 
 ### Basic Settings
 
-- Please use `trainer_robust.py` to run the project for the above datasets and weather conditions.
+- Please use `dataset/trainer_dense.py` to train and save the pretrain model for the above datasets.
+- Please use `trainer_robust.py` to run the project for the above datasets in multiple weather conditions by loading the pretrained model above.
 
 ### Weighting-based Settings
 
@@ -43,25 +44,9 @@ All the images and labels are resized to [288 x 384] resolution.
 
 ### Parameter Settings
 
-- The model compression project is located in `prune_apgda` folder. Please use `python trainer_apgda.py` to run the project.
-
-  Please first use `--stage pretrain` to save the dense model. After using `--stage rew` to implement reweighting, finally use `--stage retrain` to retrain the compressed model.
-  
-  The pruning rate 40x is equivalent to `--prune-ratios 0.975`. The pruning rate 60x is equivalent to `--prune-ratios 0.983`.
-  
-  Min-max hyperparameter settings: beta = 50, gamma = 5 (pre-settled).
-
-- The dynamic sparse training project is located in the root folder. Please use `python trainer_nyuv2.py` or `python trainer_cifar.py` to run the corresponding project.
-  
-  Please first use `--stage pretrain` to save the dense model. After using `--stage rew` to implement reweighting, finally use `--stage retrain` to retrain the compressed model.
-  
-  Directly use `--stage retrain` to implement Dynamic Sparse Training (without loading pretrained model).
-  
-  The pruning rate 60x is equivalent to `--prune-ratios 0.983`. In this case, the `layer_prune_ratios` and `layer_grow_ratios` should be set to 0.0051.
-  
-  The pruning rate 100x is equivalent to `--prune-ratios 0.99`. In this case, the `layer_prune_ratios` and `layer_grow_ratios` should be set to 0.003.
-  
-  Min-max hyperparameter settings: beta = 10, gamma = 5 (pre-settled).
+- The total epoch is set to 1 (i.e., `--epoch 1`) to attack the pretrained model.
+- The Normalization method is implemented by using `--attack_weight normalize` and `--weight equal`. Otherwise, use `--attack_weight none`.
+- The Min-max optimization is fully implemented by using `--attack_weight minmax`.
 
 ## Acknowledgements
 We would sincerely thank Dr. Shikun Liu and his group for the Multi-task Attention Network (MTAN) design. The following links show their [MTAN Project Page](https://github.com/lorenmt/mtan) and [Auto-lambda Project Page](https://github.com/lorenmt/auto-lambda).
@@ -70,25 +55,19 @@ We would sincerely thank Dr. Shikun Liu and his group for the Multi-task Attenti
 If you find this code/work to be useful in your own research, please consider citing the following.
 - Conference paper:
 ```bash
-@inproceedings{guo2024min,
-  title={A Min-Max Optimization Framework for Multi-task Deep Neural Network Compression},
-  author={Guo, Jiacheng and Sun, Huiming and Qin, Minghai and Yu, Hongkai and Zhang, Tianyun},
-  booktitle={2024 IEEE International Symposium on Circuits and Systems (ISCAS)},
+@inproceedings{guo2025robust,
+  title={Robust Multi-task Adversarial Attacks Using Min-max Optimization},
+  author={Guo, Jiacheng and Li, Lei and Yang, Haochen and Geng, Baocheng and Yu, Hongkai and Qin, Minghai and Zhang, Tianyun},
+  booktitle={ICASSP 2025-2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
   pages={1--5},
-  year={2024},
+  year={2025},
   organization={IEEE}
 }
+
 ```
 - Journal article: 
 ```bash
-@article{guo2025min,
-  title = {A Min–max Optimization Framework for Sparse Multi-task Deep Neural Network},
-  author = {Guo, Jiacheng and Li, Lei and Sun, Huiming and Qin, Minghai and Yu, Hongkai and Zhang, Tianyun},
-  journal = {Neurocomputing},
-  volume = {650},
-  pages = {130865},
-  year = {2025},
-}
+TBD
 ```
 ## Contact
 If you have any questions, please contact Jiacheng Guo at `j.guo58@vikes.csuohio.edu`.
