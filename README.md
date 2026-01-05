@@ -9,6 +9,8 @@ All models were written in `PyTorch`.
 ## Datasets
 We implemented all weighting baselines presented in the paper for multiple computer vision tasks: Dense Prediction Tasks (for Cityscapes, Rainy Cityscapes, Foggy Cityscapes, and NYUv2).
 
+### Cityscapes, Foggy Cityscapes, and Rainy Cityscapes
+
 - `Cityscapes`, `Foggy Cityscapes`, and `Rainy Cityscapes` [3 Tasks]: 13 Class Semantic Segmentation + 4 Class Part Segmentation + Disparity Estimation. [512 x 256] Resolution.
 - `NYUv2` [3 Tasks]: 13 Class Segmentation + Depth Estimation + Surface Normal Prediction. [288 x 384] Resolution.
 
@@ -21,24 +23,23 @@ The `Rainy Cityscapes` dataset is generated following the instructions of [this 
 
 All the images and labels are resized to [512 x 256] resolution.
 
-Moreover, Please download the pre-processed `NYUv2` dataset [here](https://www.dropbox.com/scl/fo/p7n54hqfpfyc6fe6n62qk/AKVb28ZmgDiGdRMNkX5WJvo?rlkey=hcf31bdrezqjih36oi8usjait&e=1&dl=0) which is evaluated in the papers. (Moreover, if you are more interested, the raw 13-class NYUv2 dataset can be downloaded [here](https://github.com/ankurhanda/nyuv2-meta-data) with segmentation labels defined [here](https://github.com/ankurhanda/SceneNetv1.0/). )
+### NYUv2
+Please download the pre-processed `NYUv2` dataset [here](https://www.dropbox.com/scl/fo/p7n54hqfpfyc6fe6n62qk/AKVb28ZmgDiGdRMNkX5WJvo?rlkey=hcf31bdrezqjih36oi8usjait&e=1&dl=0) which is evaluated in the papers. (Moreover, if you are more interested, the raw 13-class NYUv2 dataset can be downloaded [here](https://github.com/ankurhanda/nyuv2-meta-data) with segmentation labels defined [here](https://github.com/ankurhanda/SceneNetv1.0/). )
 All the images and labels are resized to [288 x 384] resolution.
 
 ## Experiments
 
-### Weight Pruning for Model Compression
-The folder `prune_apgda` provides the code of our proposed network using weight pruning strategy to compress the model in 40x and 60x along with all the baselines on `NYUv2` dataset presented in paper 1. The basic network structure is established based on [MTAN](https://github.com/lorenmt/mtan). 
-We propose a novel weight pruning method to compress the model, and a Min-Max optimization method including APGDA algorithm to further inprove the model performance.
+### Basic Settings
 
-### Dynamic Sparse Training and More Comparable Baselines
-The root folder provides the code of our proposed network using dynamic sparse training together with weight pruning for comparison in 60x and 100x along with all the baselines on `NYUv2` and `CIFAR100` datasets presented in paper 2. The basic network structure is established based on [Auto-lambda](https://github.com/lorenmt/auto-lambda).
+- Please use `trainer_robust.py` to run the project for the above datasets and weather conditions.
 
-**Weighting-based settings:**
+### Weighting-based Settings
+
 - Equal: All task weights are 1. `--weight equal`
 - Uncertainty: [Uncertainty](https://openaccess.thecvf.com/content_cvpr_2018/papers/Kendall_Multi-Task_Learning_Using_CVPR_2018_paper.pdf). `--weight uncert`
 - Dynamic Weighting Average: [DWA](https://openaccess.thecvf.com/content_CVPR_2019/papers/Liu_End-To-End_Multi-Task_Learning_With_Attention_CVPR_2019_paper.pdf). `--weight dwa`
+- Auto Lambda: [Auto-Lambda](https://openreview.net/pdf?id=KKeCMim5VN). `--weight autol`
 - Min-max: Our proposed method. `--weight minmax`
-
 
 ### Parameter Settings
 
