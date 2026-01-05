@@ -29,8 +29,6 @@ parser.add_argument('--attack_method', default='pgdl2', type=str, help='pgdl2, p
 parser.add_argument('--attack_weight', default='none', type=str, help='minmax, normalize, none')
 parser.add_argument('--gamma', default=1, type=int, help='gamma for minmax')
 parser.add_argument('--gpu', default=0, type=int, help='gpu ID')
-parser.add_argument('--attack_target', default=0, type=int, help='1,2,3 for attack 1st, 2nd, 3rd task only, 0 for do not do this')
-parser.add_argument('--w_reset', default=1, type=int, help='1 for reset weight, 0 for not reset weight')
 
 opt = parser.parse_args()
 
@@ -276,8 +274,7 @@ for index in range(total_epoch):
 
         ori_images = test_data.clone().detach()
 
-        if opt.w_reset == 1:
-            task_W = torch.ones(K) / K 
+        task_W = torch.ones(K) / K 
 
 
         for _ in range(10):
@@ -292,16 +289,6 @@ for index in range(total_epoch):
                 test_loss_record0 = test_loss0[0].detach()
                 test_loss_record1 = test_loss0[1].detach()
                 test_loss_record2 = test_loss0[2].detach()
-
-
-            if opt.attack_target == 1:
-                total_loss = test_loss0[0]
-            elif opt.attack_target == 2:
-                total_loss = test_loss0[1]
-            elif opt.attack_target == 3:
-                total_loss = test_loss0[2]
-            else:
-                break
 
             model.zero_grad()
 
@@ -363,32 +350,12 @@ for index in range(total_epoch):
             L2 = (test_loss[1]-test_loss_record1)/test_loss_record1
             L3 = (test_loss[2]-test_loss_record2)/test_loss_record2
 
-            if opt.attack_target == 1:
-                attack_loss_record = train_loss*1
-                attack_loss_record[0] =  torch.abs((test_loss[0]-test_one0)/test_one0)
-                attack_loss_record[1] =  torch.abs(L2)
-                attack_loss_record[2] =  torch.abs(L3)
-                total_loss = task_W[0]*L1-task_W[1]*torch.abs(L2)-task_W[2]*torch.abs(L3)
-            elif opt.attack_target == 2:
-                attack_loss_record = train_loss*1
-                attack_loss_record[0] =  torch.abs(L1)
-                attack_loss_record[1] =  torch.abs((test_loss[1]-test_one1)/test_one1)
-                attack_loss_record[2] =  torch.abs(L3)
-                total_loss = -task_W[0]*torch.abs(L1)+task_W[1]*L2-task_W[2]*torch.abs(L3)
-            elif opt.attack_target == 3:
-                attack_loss_record = train_loss*1
-                attack_loss_record[0] =  torch.abs(L1)
-                attack_loss_record[1] =  torch.abs(L2)
-                attack_loss_record[2] =  torch.abs((test_loss[2]-test_one2)/test_one2)
-                total_loss = -task_W[0]*torch.abs(L1)-task_W[1]*torch.abs(L2)+task_W[2]*L3
-            
-            else:
-                attack_loss_record = train_loss*1
-                attack_loss_record[0] =  -L1
-                attack_loss_record[1] =  -L2
-                attack_loss_record[2] =  -L3
+            attack_loss_record = train_loss*1
+            attack_loss_record[0] =  -L1
+            attack_loss_record[1] =  -L2
+            attack_loss_record[2] =  -L3
 
-                total_loss = task_W[0]*L1 + task_W[1]*L2 + task_W[2]*L3            
+            total_loss = task_W[0]*L1 + task_W[1]*L2 + task_W[2]*L3            
 
             if (opt.weight == 'equal' and opt.attack_weight == 'none'):
                 total_loss = test_loss[0] + test_loss[1] + test_loss[2]
