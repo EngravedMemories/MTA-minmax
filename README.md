@@ -1,9 +1,5 @@
-# MTA_minmax
+# Multi-task Adversarial Attacks for Autonomous Driving in Different Weather Conditions
 
-
-
-
-# A Min-max Optimization Framework for Sparse Multi-task Deep Neural Network
 This repository contains the source code of Multi-Task Learning with Min-max Optimization and baselines from the following papers:
 1) [Robust Multi-task Adversarial Attacks Using Min-max Optimization](https://ieeexplore.ieee.org/abstract/document/10888541)) (Conference Version, In proceedings of ICASSP 2025);
 2) Multi-task Adversarial Attacks for Autonomous Driving in Different Weather Conditions (Extended Journal Version, Accepted by Applied Intelligence, 2026).
